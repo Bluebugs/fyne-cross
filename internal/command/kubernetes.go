@@ -336,10 +336,10 @@ func (i *KubernetesContainerImage) Finalize(packageName string) (ret error) {
 	// Upload cached data to S3
 	for _, mountPoint := range i.CloudLocalMount {
 		log.Infof("Uploading %s to %s", mountPoint.InContainer, i.Runner.s3Path+"/"+mountPoint.Name+"-"+i.ID+".tar.zstd")
-		err := i.Run(i.Runner.vol, Options{},
+		err := i.Run(i.Runner.vol, Options{WorkDir: mountPoint.InContainer},
 			AddAWSParameters(i.Runner.aws,
 				"fyne-cross-s3", "upload-directory",
-				mountPoint.InContainer, i.Runner.s3Path+"/"+mountPoint.Name+"-"+i.ID+".tar.zstd"),
+				".", i.Runner.s3Path+"/"+mountPoint.Name+"-"+i.ID+".tar.zstd"),
 		)
 		if err != nil {
 			log.Infof("Failed to upload %s", mountPoint.InContainer)
