@@ -300,6 +300,16 @@ func (i *KubernetesContainerImage) Prepare() error {
 		download(i.Runner.vol, i.Runner.s3Path+"/"+mountPoint.Name+"-"+i.ID+".tar.zstd", mountPoint.InContainer)
 	}
 
+	log.Infof("Creating working directory inside Kubernetes pods")
+	directories := []string{
+		volume.JoinPathContainer(i.Runner.vol.TmpDirContainer(), i.GetID()),
+		volume.JoinPathContainer(i.Runner.vol.BinDirContainer(), i.GetID()),
+	}
+
+	for _, directory := range directories {
+		i.Run(i.Runner.vol, Options{}, []string{"mkdir", "-p", directory})
+	}
+
 	return nil
 }
 
