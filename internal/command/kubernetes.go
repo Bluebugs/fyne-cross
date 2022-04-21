@@ -142,7 +142,7 @@ func (i *KubernetesContainerImage) Run(vol volume.Volume, opts Options, cmdArgs 
 		Stdin:   true,
 		Stdout:  true,
 		Stderr:  true,
-		TTY:     true,
+		TTY:     false,
 	}
 	req.VersionedParams(
 		option,
