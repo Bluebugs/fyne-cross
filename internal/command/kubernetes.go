@@ -247,7 +247,7 @@ func (i *KubernetesContainerImage) Prepare() error {
 		},
 	}
 
-	log.Infof("Creating pod %q", i.podName)
+	log.Infof("Creating pod %q with working directory %v", i.podName, i.Runner.vol.WorkDirContainer())
 
 	// Start pod
 	api := i.Runner.kubectl.CoreV1()
