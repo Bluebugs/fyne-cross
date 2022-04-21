@@ -138,7 +138,6 @@ func cleanTargetDirs(ctx Context, image ContainerImage) error {
 
 // prepareIcon prepares the icon for packaging
 func prepareIcon(ctx Context, image ContainerImage) error {
-
 	if !ctx.NoProjectUpload {
 		if _, err := os.Stat(ctx.Icon); os.IsNotExist(err) {
 			defaultIcon, err := volume.DefaultIconHost()
@@ -157,16 +156,16 @@ func prepareIcon(ctx Context, image ContainerImage) error {
 			}
 			log.Infof("[✓] Created a placeholder icon using Fyne logo for testing purpose")
 		}
-	}
 
-	if image.GetOS() == "windows" {
-		// convert the png icon to ico format and store under the temp directory
-		icoIcon := volume.JoinPathHost(ctx.TmpDirHost(), image.GetID(), ctx.Name+".ico")
-		err := icon.ConvertPngToIco(ctx.Icon, icoIcon)
-		if err != nil {
-			return fmt.Errorf("could not create the windows ico: %v", err)
+		if image.GetOS() == "windows" {
+			// convert the png icon to ico format and store under the temp directory
+			icoIcon := volume.JoinPathHost(ctx.TmpDirHost(), image.GetID(), ctx.Name+".ico")
+			err := icon.ConvertPngToIco(ctx.Icon, icoIcon)
+			if err != nil {
+				return fmt.Errorf("could not create the windows ico: %v", err)
+			}
+			return nil
 		}
-		return nil
 	}
 
 	err := image.Run(ctx.Volume, Options{}, []string{"cp", ctx.Icon, volume.JoinPathContainer(ctx.TmpDirContainer(), image.GetID(), icon.Default)})
